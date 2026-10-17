@@ -1,51 +1,87 @@
-# FORMA — independent creative studio
+# FORMA — Digital Agency Website
 
-A Next.js recreation of Landor's visual structure, adapted to a forest / ivory / mint palette, original copy, and the supplied local imagery. FORMA is the working name, not a final business identity.
+A website for FORMA, a made-up independent creative studio. Big serif type, a forest-green palette and scroll-driven motion. Built with Next.js 16, React 19, GSAP and Swiper.
 
-## Run locally
+**[Live site →](https://forma-digital-agency.vercel.app/)**
 
-```sh
+![FORMA homepage hero](docs/screenshot.png)
+
+> The layout and interactions are modelled on [Landor](https://landor.com/)'s site. The identity, colours, copy, case studies and code are my own. No source code, fonts or project media were copied. [`docs/design-reference.md`](docs/design-reference.md) maps each reference pattern to how it was adapted.
+
+## Pages
+
+| Route | What's there |
+| --- | --- |
+| `/` | Full-screen video hero with the FORMA wordmark, a scroll-expanding intro panel, a showreel in a native `<dialog>` player, a featured-work carousel, a services section and a dotted world map |
+| `/our-work` | Two-column project grid (one column on mobile) |
+| `/our-work/[slug]` | Eight statically generated case studies, each with an opening visual, breadcrumbs, a narrative and a gallery |
+| `/contact-us` | A searchable list of locations showing each city's live local time, a zoomable map with pins, and an enquiry form |
+| `/join-us` | Role cards you can filter by team, each opening a dialog with details |
+| `/privacy-policy`, `/cookie-policy`, `/terms-of-use` | Policy pages, all served by one dynamic route |
+
+## Highlights
+
+- **Scroll animation with GSAP ScrollTrigger.** Elements fade in as you reach them, images drift with parallax, the hero wordmark fades out, the intro panel widens and the statement lines stagger in. It all lives in one client component ([`motion.tsx`](src/components/motion.tsx)) that reruns on every route change.
+- **Respects reduced motion.** Animations are inside `gsap.matchMedia('(prefers-reduced-motion: no-preference)')`. Background videos pause for users who prefer reduced motion, pause when scrolled out of view, and have a visible pause button.
+- **Carousel built on Swiper.** Swipe, arrows, dots and autoplay.
+- **No backend.** The contact form turns your input into a `.txt` enquiry you can download, so nothing is sent anywhere. The careers page links into it with `?enquiry=Careers` preset.
+- **Self-hosted fonts.** Bodoni Moda and Manrope are served from `/public/fonts` (both OFL-licensed), with no requests to Google Fonts.
+- **Responsive.** Checked at 375px, 768px and desktop widths with no page-level horizontal scroll.
+
+## Tech stack
+
+- [Next.js 16](https://nextjs.org/) (App Router) and React 19
+- TypeScript
+- [GSAP](https://gsap.com/) with ScrollTrigger
+- [Swiper](https://swiperjs.com/)
+- Plain CSS in [`globals.css`](src/app/globals.css), no UI framework
+- Deployed on Vercel
+
+## Project structure
+
+```
+src/
+├── app/
+│   ├── page.tsx              # Home
+│   ├── our-work/             # Work index + [slug] case studies
+│   ├── contact-us/
+│   ├── join-us/
+│   ├── [legal]/              # Privacy, cookie and terms pages
+│   ├── layout.tsx            # Metadata + site shell
+│   └── globals.css           # All styles + @font-face
+├── components/
+│   ├── home.tsx              # Homepage sections + carousel
+│   ├── motion.tsx            # All GSAP scroll animation
+│   ├── site-shell.tsx        # Header, mobile menu, footer, modal
+│   ├── video.tsx             # Background video with pause control
+│   ├── contact.tsx           # Location directory, map, enquiry form
+│   ├── careers.tsx           # Role filters + dialogs
+│   └── world-map.tsx
+└── lib/
+    └── projects.ts           # Case-study content
+```
+
+To add a case study, add an entry to [`src/lib/projects.ts`](src/lib/projects.ts). The work grid, carousel and `/our-work/[slug]` route all read from that file.
+
+## Getting started
+
+Requires **Node.js 20.9+**.
+
+```bash
 npm install
 npm run dev
 ```
 
-Open http://127.0.0.1:3000.
+Then open [http://127.0.0.1:3000](http://127.0.0.1:3000).
 
-```sh
-npm run typecheck
-npm run build
-npm start
-```
+| Script | Purpose |
+| --- | --- |
+| `npm run dev` | Start the dev server |
+| `npm run build` | Create a production build |
+| `npm start` | Serve the production build |
+| `npm run typecheck` | Run the TypeScript compiler without emitting files |
 
-Node.js 20.9 or newer is required. On this Windows environment, Next.js compilation needed execution outside the restricted filesystem sandbox. This was a path access restriction, not a code failure.
+## Notes
 
-## Included
-
-- Homepage with full-screen supplied video, oversized serif wordmark, parallax, expanding introduction surface, video modal, Swiper carousel, animated typography, service cards, dotted world graphic, and gradient footer.
-- Two-column work index and eight individual case studies, including galleries, motion, story sections, and next-project navigation.
-- Contact page with searchable locations, live time zones, interactive map markers and zoom, validated enquiry form, and downloadable enquiry.
-- Filterable careers grid and accessible role-detail dialogs.
-- Mobile navigation, privacy preference storage, legal pages, and a custom 404.
-- Local variable fonts, font licenses, and local media; no remote font dependency.
-- Reduced-motion support and controls for background video.
-
-## Edit the content
-
-- Project content: `src/lib/projects.ts`.
-- Palette, spacing, type, and responsive rules: `src/app/globals.css`.
-- Homepage: `src/components/home.tsx`.
-- Scroll animation: `src/components/motion.tsx`.
-- Navigation, footer, privacy preferences: `src/components/site-shell.tsx`.
-- Contact and careers: `src/components/contact.tsx` and `src/components/careers.tsx`.
-
-## Integration status
-
-This is a local portfolio concept, not a deployed business site. The form prepares and downloads an enquiry entirely in the browser; it does not send email. The roles are clearly marked examples, not live vacancies. Locations indicate collaboration time zones, not claimed physical offices. No analytics, third-party maps, CMS, or recruitment platform is connected. The language control explains that only English is available.
-
-Before using the project for a real business, replace the working identity and concept content, connect the intended form delivery provider, and supply actual contact and recruitment details.
-
-## Asset provenance
-
-All imagery and videos were copied from the user-supplied `C:/Users/Lenovo/Downloads/Assets` folder. Reference imagery retains its owners' rights and is described as concept/reference material. The design does not claim those reference works as commissioned FORMA client work. Bodoni Moda and Manrope use the SIL Open Font License; license texts are in `public/fonts`.
-
-`docs/design-reference.md` records the inspected reference and the adaptation boundaries.
+- FORMA is not a real agency. The case studies and job listings are made up for this portfolio piece.
+- The contact form only builds a downloadable file. It doesn't send email or store anything.
